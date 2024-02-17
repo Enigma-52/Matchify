@@ -57,16 +57,18 @@ app.get('/callback', async (req, res) => {
       Authorization: `Bearer ${accessToken}`,
     },
   });
-console.log("STATUS" + currentlyPlayingResponse.status);
-  // Check if the user is currently playing a track
+
   if (currentlyPlayingResponse.status === 204) {
-    res.status(204).json({ message: 'No track currently playing' });
+    res.redirect('/callback.html'); // Redirect to a different route if no track is currently playing
     return;
   }
 
   // Parse the response as JSON
   const currentlyPlayingData = await currentlyPlayingResponse.json();
-  console.log(currentlyPlayingData);
+
+  console.log(currentlyPlayingData.item.name);
+  // Redirect to callback.html and pass currently playing data as query parameters
+  res.redirect(`/callback.html?trackName=${encodeURIComponent(currentlyPlayingData.item.name)}`);
 });
 
 
