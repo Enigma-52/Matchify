@@ -6,19 +6,9 @@
   <title>Callback Page</title>
 </head>
 <body>
-  <h1>Callback Page</h1>
-  <div id="currentlyPlayingInfo"></div>
-
-  <script>
-    // Extract track name from query parameters
-    const params = new URLSearchParams(window.location.search);
-    const trackName = params.get('trackName');
-
-    // Display track name
-    const container = document.getElementById('currentlyPlayingInfo');
-    const trackNameElement = document.createElement('p');
-    trackNameElement.textContent = `Track: ${trackName}`;
-    container.appendChild(trackNameElement);
+  <ul id="songs-list"></ul>
+  <script src="./scripts/callback.js">
+    
   </script>
 </body>
 </html>
