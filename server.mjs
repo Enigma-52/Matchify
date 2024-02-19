@@ -49,7 +49,7 @@ app.get('/login', (req, res) => {
     res.redirect(authorizeUrl);
 });
 
-var x;
+var matchData;
 
 app.get('/callback', async (req, res) => {
     try {
@@ -138,7 +138,7 @@ app.get('/callback', async (req, res) => {
             }
         });
 
-        x = matchingSongsCounts;
+        matchData = matchingSongsCounts;
         res.redirect('callback.html');
 
     } catch (error) {
@@ -148,7 +148,7 @@ app.get('/callback', async (req, res) => {
 });
 
 app.get('/fetcher', async (req, res) => {
-    return res.send(x);
+    return res.send(matchData);
 });
 
 app.listen(PORT, () => {
