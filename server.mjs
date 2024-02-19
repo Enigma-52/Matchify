@@ -98,15 +98,12 @@ app.get('/callback', async (req, res) => {
       album: item.track.album.name
     }));
 
-    console.log('User\'s Liked Songs:', tracks);
-
     try{
     const docRef = doc(db, "users", userId); // Replace "documentId" with the actual document ID you want to update
     const data = {
       likedSongs : tracks
     };
     await setDoc(docRef, data, { merge: true });
-    console.log("Document updated successfully");
   } catch (e) {
     console.error("Error updating document: ", e);
   }
@@ -126,7 +123,6 @@ app.get('/callback', async (req, res) => {
       }
     });
 
-    console.log('Matching Songs Counts:', matchingSongsCounts);
     x=matchingSongsCounts; 
     res.redirect('callback.html');
   } catch (error) {
