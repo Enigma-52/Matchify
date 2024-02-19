@@ -20,25 +20,30 @@
     </table>
 
     <script>
+      console.log("working");
         // Fetch matching songs data from the server and update the table
-        fetch('/callback')
-            .then(response => response.json())
-            .then(data => {
-                const matchingSongsBody = document.getElementById('matchingSongsBody');
+        fetch('/fetcher')
+        .then(response => response.json())
+        .then(data => {
+            console.log('Matching Songs Counts:', data);
+            
+            // Update the table with the received data
+            const matchingSongsBody = document.getElementById('matchingSongsBody');
 
-                data.matchingSongsCounts.forEach(entry => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${entry.userId}</td>
-                        <td>${entry.matchingSongsCount}</td>
-                    `;
-                    matchingSongsBody.appendChild(row);
-                });
-            })
-            .catch(error => {
-                console.error('Error fetching matching songs:', error);
-                // Handle error
+            data.forEach(entry => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${entry.userId}</td>
+                    <td>${entry.matchingSongsCount}</td>
+                `;
+                matchingSongsBody.appendChild(row);
             });
+        })
+        .catch(error => {
+            console.error('Error fetching matching songs:', error);
+            // Handle error
+        });
+
     </script>
 </body>
 </html>

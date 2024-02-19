@@ -38,6 +38,8 @@ app.get('/login', (req, res) => {
   res.redirect(authorizeUrl);
 });
 
+var x;
+
 app.get('/callback', async (req, res) => {
   try {
     const { code } = req.query;
@@ -125,15 +127,17 @@ app.get('/callback', async (req, res) => {
     });
 
     console.log('Matching Songs Counts:', matchingSongsCounts);
-    
-    return matchingSongsCounts;
-
+    x=matchingSongsCounts; 
+    res.redirect('callback.html');
   } catch (error) {
     console.error("Error updating document or retrieving matching songs:", error);
     res.status(500).send('Internal Server Error');
   }
 });
 
+app.get('/fetcher', async (req, res) => {
+  return res.send(x);
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
