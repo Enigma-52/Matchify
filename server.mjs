@@ -98,6 +98,7 @@ app.get('/callback', async (req, res) => {
 
     console.log('User\'s Liked Songs:', tracks);
 
+    try{
     const docRef = doc(db, "users", userId); // Replace "documentId" with the actual document ID you want to update
     const data = {
       likedSongs : tracks
@@ -107,32 +108,31 @@ app.get('/callback', async (req, res) => {
   } catch (e) {
     console.error("Error updating document: ", e);
   }
-});
 
+    const querySnapshot = await getDocs(collection(db, "users"));
+    const matchingSongsCounts = [];
 
-// Route for sending songs data to callback.js
-app.get('/songs', async (req, res) => {
-  try {
-    // Fetch all documents from the 'users' collection
-    const songsCollection = collection(db, 'users');
-    const querySnapshot = await getDocs(songsCollection);
-
-    // Extract data from query snapshot
-    const songs = [];
     querySnapshot.forEach(doc => {
-      songs.push(doc.data());
+      if (doc.id !== userId) {
+        const otherUserId = doc.id;
+        const otherUserLikedSongs = doc.data().likedSongs;
+        const matchingSongs = tracks.filter(track => otherUserLikedSongs.some(otherTrack => track.name === otherTrack.name && track.artist === otherTrack.artist && track.album === otherTrack.album));
+        matchingSongsCounts.push({
+          userId: otherUserId,
+          matchingSongsCount: matchingSongs.length
+        });
+      }
     });
 
-    console.log(songs);
-    // Send the songs data as JSON response
-    res.json(songs);
+    console.log('Matching Songs Counts:', matchingSongsCounts);
+    
+    return matchingSongsCounts;
 
   } catch (error) {
-    console.error("Error fetching data:", error);
-    res.status(500).json({ error: "An error occurred while fetching data." });
+    console.error("Error updating document or retrieving matching songs:", error);
+    res.status(500).send('Internal Server Error');
   }
 });
-
 
 
 app.listen(PORT, () => {

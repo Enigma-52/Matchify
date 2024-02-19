@@ -1,14 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Callback Page</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matching Songs</title>
 </head>
 <body>
-  <ul id="songs-list"></ul>
-  <script src="./scripts/callback.js">
-    
-  </script>
+    <h1>Matching Songs for Each User</h1>
+    <table id="matchingSongsTable">
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Matching Songs Count</th>
+            </tr>
+        </thead>
+        <tbody id="matchingSongsBody">
+            <!-- Table body will be populated dynamically -->
+        </tbody>
+    </table>
+
+    <script>
+        // Fetch matching songs data from the server and update the table
+        fetch('/callback')
+            .then(response => response.json())
+            .then(data => {
+                const matchingSongsBody = document.getElementById('matchingSongsBody');
+
+                data.matchingSongsCounts.forEach(entry => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${entry.userId}</td>
+                        <td>${entry.matchingSongsCount}</td>
+                    `;
+                    matchingSongsBody.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching matching songs:', error);
+                // Handle error
+            });
+    </script>
 </body>
 </html>
