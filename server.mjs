@@ -5,6 +5,7 @@ const {
     doc,
     setDoc,
     getDocs,
+    getDoc,
     collection
 } = pkg;
 
@@ -22,6 +23,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = express();
+app.use(express.json())
 
 const PORT = process.env.PORT || 3010;
 
@@ -50,6 +52,7 @@ app.get('/login', (req, res) => {
 });
 
 var matchData;
+var globalUserId;
 
 app.get('/callback', async (req, res) => {
     try {
@@ -92,7 +95,7 @@ app.get('/callback', async (req, res) => {
 
         const userProfileData = await userProfileResponse.json();
         const userId = userProfileData.id;
-
+        globalUserId = userId;
         // Fetch user's saved tracks with a limit of 50
         const savedTracksResponse = await fetch('https://api.spotify.com/v1/me/tracks?limit=50', {
             headers: {
@@ -133,12 +136,35 @@ app.get('/callback', async (req, res) => {
                 const matchingSongs = tracks.filter(track => otherUserLikedSongs.some(otherTrack => track.name === otherTrack.name && track.artist === otherTrack.artist && track.album === otherTrack.album));
                 matchingSongsCounts.push({
                     userId: otherUserId,
-                    matchingSongsCount: matchingSongs.length
+                    matchingSongsCount: matchingSongs.length,
+                    globalUserId:globalUserId
                 });
             }
         });
 
         matchData = matchingSongsCounts;
+        const docSnapshot = await getDocs(collection(db, "users"));
+        let userData = {};
+
+        docSnapshot.forEach(doc => {
+            if (doc.id === userId) {
+                userData = doc.data();
+            }
+        });
+
+        // Add the new request to the existing requests array or create a new array if it doesn't exist
+        const requests = userData.matchData || [];
+        for (const key in matchData) {
+            if (Object.hasOwnProperty.call(matchData, key)) {
+                requests.push({ [key]: matchData[key] });
+            }
+        }
+        const data = {
+            matches: requests
+        };
+
+        // Update the document with the new requests array
+        await setDoc(doc(db, "users", userId), data, { merge: true });
         res.redirect('callback.html');
 
     } catch (error) {
@@ -146,6 +172,68 @@ app.get('/callback', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
+app.post('/reqSender', async (req, res) => {
+    const { userId, input1, input2, input3 } = req.body;
+
+    try {
+        // Reference the existing document in Firestore
+        const querySnapshot = await getDocs(collection(db, "users"));
+        let userData = {}; // Declare userData outside the if block
+
+        querySnapshot.forEach(doc => {
+            if (doc.id === userId) {
+                userData = doc.data();
+            }
+        });
+
+        if (Object.keys(userData).length === 0) {
+            console.log("Document does not exist");
+        }
+
+        // Create a new request object with the input data
+        const newRequest = { input1, input2, input3 };
+
+        // Add the new request to the existing requests array or create a new array if it doesn't exist
+        const requests = userData.requests || [];
+        requests.push(newRequest);
+        const data = {
+            requests: requests
+        };
+
+        // Update the document with the new requests array
+        await setDoc(doc(db, "users", userId), data, { merge: true });
+
+        // Send a success response to the client
+        res.status(200).json({ message: 'Data added to document successfully' });
+    } catch (error) {
+        console.error('Error adding data to document:', error);
+        res.status(500).json({ error: 'An error occurred while adding data to document' });
+    }
+});
+
+// Define a new endpoint to fetch the requests for a specific user
+app.get('/fetchRequests', async (req, res) => {
+    try {
+        const userId = globalUserId; 
+        const querySnapshot = await getDocs(collection(db, "users"));
+        let userData = {}; // Declare userData outside the if block
+
+        querySnapshot.forEach(doc => {
+            if (doc.id === userId) {
+                userData = doc.data();
+            }
+        });
+        console.log(userData.requests);
+        res.send(userData.requests);
+    } catch (error) {
+        console.error('Error fetching requests:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+
+
 
 app.get('/fetcher', async (req, res) => {
     return res.send(matchData);

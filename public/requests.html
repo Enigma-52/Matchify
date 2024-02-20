@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Requests</title>
+    <style>
+        /* Style for the card container */
+        #requestsContainer {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        /* Style for individual card */
+        .card {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: calc(33.33% - 40px); /* Adjust width based on your layout */
+            box-sizing: border-box;
+        }
+
+        /* Style for card title */
+        .card h2 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        /* Style for input paragraphs */
+        .card p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="requestsContainer"></div>
+
+    <script>
+        fetch('/fetchRequests') // Replace 'yourUserId' with the actual userId
+            .then(response => response.json())
+            .then(requests => {
+                // Get the container element
+                const container = document.getElementById('requestsContainer');
+                
+                // Loop through each request and create a card-like structure
+                requests.forEach((request, index) => {
+                    // Create a div element for each request
+                    const card = document.createElement('div');
+                    card.classList.add('card');
+                    card.innerHTML = `
+                        <h2>Request ${index + 1}</h2>
+                        <p>Input 1: ${request.input1}</p>
+                        <p>Input 2: ${request.input2}</p>
+                        <p>Input 3: ${request.input3}</p>
+                    `;
+
+                    // Append the card to the container
+                    container.appendChild(card);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching requests:', error);
+                // Handle error
+            });
+    </script>
+</body>
+</html>
