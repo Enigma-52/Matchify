@@ -32,7 +32,29 @@ function createModal(userId) {
 
     const skipButton = modal.querySelector('.skip-button');
     skipButton.addEventListener('click', () => {
+            console.log("Skip button working?");
+            console.log(globalUserId);
+            console.log(userId);
+            fetch('/skipped', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ globalUserId, userId })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to send data to server');
+                }
+            })
+            .catch(error => {
+                console.error('Error sending data to server:', error);
+            });
+            fetchMatchingSongs();
         modal.style.display = 'none';
+        setTimeout(function() {
+            location.reload();
+        }, 500);
     });
 
     // Get the send button
@@ -77,29 +99,42 @@ function sendUserData(userId, input1, input2, input3) {
         console.error('Error sending data:', error);
     });
 }
-// Fetch matching songs data from the server and update the table
-fetch('/fetcher')
-.then(response => response.json())
-.then(data => {
-    console.log('Matching Songs Counts:', data);
-    
-    // Update the table with the received data
-    const matchingSongsBody = document.getElementById('matchingSongsBody');
-    
-    data.forEach(entry => {
-        globalUserId = entry.globalUserId;
-        console.log("id is " + globalUserId);
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${entry.userId}</td>
-            <td>${entry.matchingSongsCount}</td>
-            <td><button class="modal-button" onclick="createModal('${entry.userId}')">Open Modal</button></td>
-        `;
-        matchingSongsBody.appendChild(row);
-    });
-})
-.catch(error => {
-    console.error('Error fetching matching songs:', error);
-    // Handle error
-});
+
+function fetchMatchingSongs() {
+    // Fetch matching songs data from the server and update the table
+    fetch('/fetcher')
+        .then(response => response.json())
+        .then(data => {
+            console.log('Matching Songs Counts:', data);
+            
+            // Update the table with the received data
+            const matchingSongsBody = document.getElementById('matchingSongsBody');
+            matchingSongsBody.innerHTML = '';
+
+            data.forEach(entry => {
+                globalUserId = entry['0'].globalUserId;
+                console.log("id is " + globalUserId);
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${entry['0'].userId}</td>
+                    <td>${entry['0'].matchingSongsCount}</td>
+                    <td><button class="modal-button" onclick="createModal('${entry['0'].userId}')">Open Modal</button></td>
+                `;
+                matchingSongsBody.appendChild(row);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching matching songs:', error);
+            // Handle error
+        });
+}
+
+
+
+
+
+
+// Call the function initially
+fetchMatchingSongs();
 

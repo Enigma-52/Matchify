@@ -212,6 +212,30 @@ app.post('/reqSender', async (req, res) => {
     }
 });
 
+app.post('/skipped', async (req, res) => {
+    const { globalUserId, userId } = req.body;
+    try {
+        // Update the matches data where globalUserId matches myGlobalUserId
+        const querySnapshot = await getDocs(collection(db, "users"));
+        querySnapshot.forEach(async (doc) => {
+            if (doc.id === globalUserId) {
+                const skipped = doc.data().skipped || [];
+                const updatedSkipped = [...skipped, userId];
+                console.log("skip update");
+                console.log(updatedSkipped);
+                await setDoc(doc.ref, {skipped: updatedSkipped }, { merge: true });
+            }
+        });
+        // Send a success response back to the client
+        res.status(200).send('Matches data updated successfully');
+    } catch (error) {
+        console.error('Error updating matches data:', error);
+        res.status(500).send('An error occurred while updating matches data');
+    }
+});
+
+
+
 // Define a new endpoint to fetch the requests for a specific user
 app.get('/fetchRequests', async (req, res) => {
     try {
@@ -232,12 +256,30 @@ app.get('/fetchRequests', async (req, res) => {
     }
 });
 
-
-
-
 app.get('/fetcher', async (req, res) => {
-    return res.send(matchData);
+    try {
+        const querySnapshot = await getDocs(collection(db, "users"));
+        let matchesData = []; // Initialize matchesData array
+        querySnapshot.forEach(doc => {
+            if (doc.id === globalUserId) {
+                const userData = doc.data();
+                const matches = userData.matches || [];
+                console.log(matches); // Log matches data for the specific user
+                const skippedIds = userData.skipped || []; // Fetch skipped user ids
+                matchesData = matches.filter(match => !skippedIds.includes(match[0].userId)); // Filter out matches where userId is skipped
+            }
+        });
+        console.log("Final Data");
+        console.log(matchesData);
+        res.send(matchesData);
+    } catch (error) {
+        console.error('Error fetching matches data:', error);
+        res.status(500).send('Internal Server Error');
+    }
 });
+
+
+
 
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
