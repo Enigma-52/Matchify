@@ -264,13 +264,10 @@ app.get('/fetcher', async (req, res) => {
             if (doc.id === globalUserId) {
                 const userData = doc.data();
                 const matches = userData.matches || [];
-                console.log(matches); // Log matches data for the specific user
                 const skippedIds = userData.skipped || []; // Fetch skipped user ids
                 matchesData = matches.filter(match => !skippedIds.includes(match[0].userId)); // Filter out matches where userId is skipped
             }
         });
-        console.log("Final Data");
-        console.log(matchesData);
         res.send(matchesData);
     } catch (error) {
         console.error('Error fetching matches data:', error);
