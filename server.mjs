@@ -50,7 +50,7 @@ app.get('/login', (req, res) => {
         });
     res.redirect(authorizeUrl);
 });
-
+ 
 var matchData;
 var globalUserId;
 
@@ -165,14 +165,45 @@ app.get('/callback', async (req, res) => {
 
         // Update the document with the new requests array
         await setDoc(doc(db, "users", userId), data, { merge: true });
-        res.redirect('callback.html');
+        if(userData.data)
+        {
+            res.redirect('callback.html');
+        }
+        else res.redirect('details.html');
+
 
     } catch (error) {
         console.error("Error updating document or retrieving matching songs:", error);
         res.status(500).send('Internal Server Error');
     }
 });
+app.post('/updateUserInfo', async (req, res) => {
+    try {
+      const { name, age, sexuality, gender, city } = req.body;
+      const userId = globalUserId; // Assuming you're storing the userId in session
+  
+      // Update the user's information in the Firestore database
+      const docRef = doc(db, "users", userId);
+      const data = {
+        name,
+        age,
+        sexuality,
+        gender,
+        city
+      };
+      const details = {data};
+      await setDoc(docRef, details, { merge: true });
+  
+      // Send a success response
+      res.status(200).send('User information updated successfully');
+    } catch (error) {
+      console.error("Error updating user information:", error);
+      // Send an error response
+      res.status(500).send('Internal Server Error');
+    }
+  });
 
+  
 app.post('/reqSender', async (req, res) => {
     const { userId, input1, input2, input3 } = req.body;
 
