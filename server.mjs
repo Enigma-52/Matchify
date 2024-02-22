@@ -291,7 +291,6 @@ app.post('/skipped', async (req, res) => {
 });
 
 
-
 // Define a new endpoint to fetch the requests for a specific user
 app.get('/fetchRequests', async (req, res) => {
     try {
