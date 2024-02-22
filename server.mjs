@@ -177,6 +177,31 @@ app.get('/callback', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
+// Define a route handler to fetch user details
+app.get('/getUserDetails', async (req, res) => {
+    try {
+      const userId = req.query.userId; // Assuming you're storing the userId in session
+  
+        const docSnapshot = await getDocs(collection(db, "users"));
+        let userData = {};
+
+        docSnapshot.forEach(doc => {
+            if (doc.id === userId) {
+                userData = doc.data();
+            }
+        });
+  
+      // Send the user details as a response
+      res.status(200).json(userData);
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+      // Send an error response
+      res.status(500).send('Internal Server Error');
+    }
+  });
+  
+
 app.post('/updateUserInfo', async (req, res) => {
     try {
       const { name, age, sexuality, gender, city } = req.body;

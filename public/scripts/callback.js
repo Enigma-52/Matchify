@@ -5,74 +5,95 @@ function createModal(userId) {
     const modal = document.createElement('div');
     modal.className = 'modal';
 
-    // Create the modal content
-    modal.innerHTML = `
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Popup Modal for User ${userId}</h2>
-            <label for="input1">Input 1:</label>
-            <input type="text" id="input1" name="input1"><br><br>
-            <label for="input2">Input 2:</label>
-            <input type="text" id="input2" name="input2"><br><br>
-            <label for="input3">Input 3:</label>
-            <input type="text" id="input3" name="input3"><br><br>
-            <button class="skip-button">Skip</button>
-            <button class="send-button">Send</button>
-        </div>
-    `;
+    // Call the getUserDetails endpoint to fetch user details from the server
+    fetch(`/getUserDetails?userId=${userId}`)
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Network response was not ok.');
+        })
+        .then(userData => {
+            // Handle the user data returned from the server
+            console.log(userData); // Log inside the Promise chain to ensure it's logged after fetching data
+            
+            // Create the modal content
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2>User Details for ${userData.data.name}</h2>
+                        <p><strong>Name:</strong> ${userData.data.name}</p>
+                        <p><strong>Age:</strong> ${userData.data.age}</p>
+                        <p><strong>Sexuality:</strong> ${userData.data.sexuality}</p>
+                        <p><strong>Gender:</strong> ${userData.data.gender}</p>
+                        <p><strong>City:</strong> ${userData.data.city}</p>
+                    <label for="input1">Input 1:</label>
+                    <input type="text" id="input1" name="input1"><br><br>
+                    <label for="input2">Input 2:</label>
+                    <input type="text" id="input2" name="input2"><br><br>
+                    <label for="input3">Input 3:</label>
+                    <input type="text" id="input3" name="input3"><br><br>
+                    <button class="skip-button">Skip</button>
+                    <button class="send-button">Send</button>
+                </div>
+            `;
+            
+            // Append the modal to the document body
+            document.body.appendChild(modal);
 
-    // Append the modal to the document body
-    document.body.appendChild(modal);
-
-    // Get the close button
-    const closeButton = modal.querySelector('.close');
-    closeButton.addEventListener('click', () => {
-        modal.style.display = 'none';
-    });
-
-    const skipButton = modal.querySelector('.skip-button');
-    skipButton.addEventListener('click', () => {
-            console.log("Skip button working?");
-            console.log(globalUserId);
-            console.log(userId);
-            fetch('/skipped', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ globalUserId, userId })
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to send data to server');
-                }
-            })
-            .catch(error => {
-                console.error('Error sending data to server:', error);
+            // Get the close button
+            const closeButton = modal.querySelector('.close');
+            closeButton.addEventListener('click', () => {
+                modal.style.display = 'none';
             });
-            fetchMatchingSongs();
-        modal.style.display = 'none';
-        setTimeout(function() {
-            location.reload();
-        }, 500);
-    });
 
-    // Get the send button
-    const sendButton = modal.querySelector('.send-button');
+            // Get the skip button
+            const skipButton = modal.querySelector('.skip-button');
+            skipButton.addEventListener('click', () => {
+                console.log("Skip button working?");
+                console.log(globalUserId);
+                console.log(userId);
+                fetch('/skipped', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ globalUserId, userId })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to send data to server');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error sending data to server:', error);
+                });
+                fetchMatchingSongs();
+                modal.style.display = 'none';
+                setTimeout(function() {
+                    location.reload();
+                }, 500);
+            });
 
-    // Add event listener for send button
-    sendButton.addEventListener('click', () => {
-        console.log('Send button clicked');
-        const input1 = modal.querySelector('#input1').value;
-        const input2 = modal.querySelector('#input2').value;
-        const input3 = modal.querySelector('#input3').value;
-        sendUserData(userId, input1, input2, input3); // Call function to send data to server
-        modal.style.display = 'none'; // Close the modal after sending data
-    });
+            // Get the send button
+            const sendButton = modal.querySelector('.send-button');
+            sendButton.addEventListener('click', () => {
+                console.log('Send button clicked');
+                const input1 = modal.querySelector('#input1').value;
+                const input2 = modal.querySelector('#input2').value;
+                const input3 = modal.querySelector('#input3').value;
+                sendUserData(userId, input1, input2, input3); // Call function to send data to server
+                modal.style.display = 'none'; // Close the modal after sending data
+            });
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
 
     // Display the modal
     modal.style.display = 'block';
 }
+
 
 // Function to send user data to the server
 function sendUserData(userId, input1, input2, input3) {
