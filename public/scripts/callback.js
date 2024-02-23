@@ -82,7 +82,7 @@ function createModal(userId) {
                 const input1 = modal.querySelector('#input1').value;
                 const input2 = modal.querySelector('#input2').value;
                 const input3 = modal.querySelector('#input3').value;
-                sendUserData(userId, input1, input2, input3); // Call function to send data to server
+                sendUserData(globalUserId,userId, input1, input2, input3); // Call function to send data to server
                 modal.style.display = 'none'; // Close the modal after sending data
             });
         })
@@ -96,10 +96,10 @@ function createModal(userId) {
 
 
 // Function to send user data to the server
-function sendUserData(userId, input1, input2, input3) {
+function sendUserData(globalUserId,userId, input1, input2, input3) {
     // Construct the request body
     console.log(userId);
-    const body = JSON.stringify({ userId, input1, input2, input3 });
+    const body = JSON.stringify({ globalUserId,userId, input1, input2, input3 });
 
     // Send a POST request to the server endpoint
     fetch('/reqSender', {

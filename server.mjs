@@ -205,9 +205,8 @@ app.get('/getUserDetails', async (req, res) => {
 app.post('/updateUserInfo', async (req, res) => {
     try {
       const { name, age, sexuality, gender, city } = req.body;
-      const userId = globalUserId; // Assuming you're storing the userId in session
-  
-      // Update the user's information in the Firestore database
+      const userId = globalUserId; 
+      
       const docRef = doc(db, "users", userId);
       const data = {
         name,
@@ -230,7 +229,7 @@ app.post('/updateUserInfo', async (req, res) => {
 
   
 app.post('/reqSender', async (req, res) => {
-    const { userId, input1, input2, input3 } = req.body;
+    const { globalUserId,userId, input1, input2, input3 } = req.body;
 
     try {
         // Reference the existing document in Firestore
@@ -246,9 +245,9 @@ app.post('/reqSender', async (req, res) => {
         if (Object.keys(userData).length === 0) {
             console.log("Document does not exist");
         }
-
+        const requester = globalUserId;
         // Create a new request object with the input data
-        const newRequest = { input1, input2, input3 };
+        const newRequest = { requester,input1, input2, input3 };
 
         // Add the new request to the existing requests array or create a new array if it doesn't exist
         const requests = userData.requests || [];
