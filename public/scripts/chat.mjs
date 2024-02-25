@@ -29,48 +29,59 @@ async function fetchDataAndStart() {
 
 // Display chat users in the sidebar
 async function displayChatUsers() {
-    const response = await fetch('/getChatIds');
-    const userListData = await response.json();
-    console.log(userListData); // Use text() instead of json()
-   const userList = document.getElementById('userList');
-   userList.innerHTML = '';
-   await updateLatestMessagesForAllUsers(userListData);
-   userListData.forEach(user => {
-      const li = document.createElement('li');
-      li.classList.add('user-box');
-      li.innerHTML = `
-        <div class="user-name">${user}</div>
-        <div class="latest-message">${getLatestMessage(user)}</div>
-      `;
-      li.onclick = () => startChatWithUser(user);
-      userList.appendChild(li);
-   });
+    try {
+        const response = await fetch('/getChatIds');
+        const userListData = await response.json();
+        console.log(userListData);
+
+        const userList = document.getElementById('userList');
+        userList.innerHTML = '';
+
+        await updateLatestMessagesForAllUsers(userListData);
+
+        userListData.forEach(async user => {
+            const li = document.createElement('li');
+            li.classList.add('user-box');
+            li.innerHTML = `
+                <div class="user-name">${user.slice(-6)}</div>
+                <div class="latest-message">${await getLatestMessage(user)}</div>
+            `;
+            li.onclick = () => startChatWithUser(user);
+            userList.appendChild(li);
+        });
+    } catch (error) {
+        console.error('Error displaying chat users:', error);
+    }
 }
 
 async function getLatestMessage(user) {
     try {
         const usersCollectionRef = collection(db, 'users');
         const querySnapshot = await getDocs(usersCollectionRef);
-        
+
         let latestMessage = null;
 
         querySnapshot.forEach(doc => {
-            if(doc.id == globalUserId)
-            {
-                const userData = doc.data();
-                const messages = userData.messages || [];
+            const userData = doc.data();
+            const messages = userData.messages || [];
 
-                messages.forEach(message => {
-                    if ((message.sender === globalUserId && message.receiver === user) || (message.sender === user && message.receiver === globalUserId)) {
-                        if (!latestMessage || message.timestamp > latestMessage.timestamp) {
-                            latestMessage = message;
-                        }
+            messages.forEach(message => {
+                if ((message.sender === globalUserId && message.receiver === user) || (message.sender === user && message.receiver === globalUserId)) {
+                    if (!latestMessage || message.timestamp > latestMessage.timestamp) {
+                        latestMessage = message;
                     }
-                });
-            }
+                }
+            });
         });
 
-        return latestMessage ? latestMessage.message : '';
+        console.log("latest: ", latestMessage);
+        var text='';
+        if(latestMessage && latestMessage.sender == globalUserId)
+        {
+            text="You: " + latestMessage.message;
+        }
+
+        return latestMessage ? text : '';
     } catch (error) {
         console.error('Error fetching latest message:', error);
         return ''; // Return empty string in case of error
@@ -78,9 +89,12 @@ async function getLatestMessage(user) {
 }
 
 
+var userId;
 // Start chat with a user
 async function startChatWithUser(user) {
-   document.getElementById('currentChatUser').textContent = `Chatting with: ${user}`;
+    userId=user;
+   document.getElementById('currentChatUser').textContent = `Chatting with: ${userId.slice(-6)}`;
+   
 
    // Display chat messages between the current user and the selected user
    const chatMessagesContainer = document.getElementById('chat-messages');
@@ -110,7 +124,7 @@ async function startChatWithUser(user) {
          } else {
             messageDiv.classList.add('received');
          }
-         messageDiv.innerHTML = `<span class="sender">${msg.sender}</span>: ${msg.message}`;
+         messageDiv.innerHTML = `<span class="sender"></span>${msg.message}`;
          chatMessagesContainer.appendChild(messageDiv);
       }
    });
@@ -119,10 +133,11 @@ async function startChatWithUser(user) {
 async function sendMessage() {
     const messageInput = document.getElementById('message-input');
     const message = messageInput.value.trim();
-    const currentChatUser = document.getElementById('currentChatUser').textContent.split(':')[1].trim(); // Extract current chat user
+    const currentChatUser = userId;
     console.log("sending");
     if (message !== '') {
         try {
+            if(1){
             const querySnapshot = await getDocs(collection(db, "users"));
             let userData = {}; // Declare userData outside the if block
 
@@ -148,6 +163,36 @@ async function sendMessage() {
                 console.log('Message added successfully');
             } catch (error) {
                 console.error('Error adding message:', error);
+            }
+            }
+            if(2)
+            {
+                const querySnapshot = await getDocs(collection(db, "users"));
+            let userData = {}; // Declare userData outside the if block
+
+            querySnapshot.forEach(doc => {
+                if (doc.id === currentChatUser) {
+                    userData = doc.data();
+                }
+            });
+            const messages = userData.messages || [];
+
+            const newMessage = {
+                sender: globalUserId,
+                receiver: currentChatUser,
+                message: message,
+                timestamp: new Date()
+            };
+
+            messages.push(newMessage);
+
+            // Update the Firestore document with the updated messages array
+            try {
+                await setDoc(doc(db, "users", currentChatUser), { messages: messages }, { merge: true });
+                console.log('Message added successfully');
+            } catch (error) {
+                console.error('Error adding message:', error);
+            }
             }
             
             // Refresh the chat messages display
