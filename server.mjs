@@ -329,6 +329,17 @@ app.get('/globalUserId', async (req, res) => {
     res.send(globalUserId);
 });
 
+app.get('/getChatIds', async (req, res) => {
+    const querySnapshot = await getDocs(collection(db, "users"));
+        let matchesData; // Initialize matchesData array
+        querySnapshot.forEach(doc => {
+            if (doc.id === globalUserId) {
+                matchesData = doc.data();
+            }
+        });
+        res.send(matchesData.chats);
+});
+
 app.get('/addChat', async (req, res) => {
     try {
         const globalUserId = req.query.globalUserId; 
