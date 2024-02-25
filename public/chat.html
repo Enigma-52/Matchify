@@ -7,6 +7,20 @@
     <link rel="stylesheet" href="./styles/chat.css">
 </head>
 <body>
+    <div class="chat-container">
+        <div class="sidebar">
+          <h2>Chat Users</h2>
+          <ul id="userList"></ul>
+        </div>
+        <div class="chat-area">
+          <h2 id="currentChatUser"></h2>
+          <div id="chat-messages" class="chat-messages"></div>
+          <div class="chat-input">
+            <input type="text" id="message-input" placeholder="Type your message...">
+            <button onclick="sendMessage()">Send</button>
+          </div>
+        </div>
+      </div>
     <script src="./scripts/chat.js"></script>
 </body>
 </html>
