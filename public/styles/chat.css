@@ -1,3 +1,4 @@
+
 body, html {
     margin: 0;
     padding: 0;
@@ -6,9 +7,8 @@ body, html {
   
   .chat-container {
     display: flex;
-    height: 100vh;
+    height: calc(100% - 56px); /* Assuming the Bootstrap navbar height is 56px */
   }
-  
   .sidebar {
     width: 250px;
     background-color: #f9f9f9;
@@ -62,12 +62,12 @@ body, html {
   
   .sent {
     background-color: #DCF8C6;
-    align-self: flex-start; /* Align sent messages to the start (left) */
+    align-self: flex-end; /* Align sent messages to the start (left) */
   }
   
   .received {
     background-color: #EAEAEA;
-    align-self: flex-end; /* Align received messages to the end (right) */
+    align-self: flex-start; /* Align received messages to the end (right) */
   }
   .chat-input {
     display: flex;

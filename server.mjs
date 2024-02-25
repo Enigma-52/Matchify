@@ -276,8 +276,6 @@ app.post('/skipped', async (req, res) => {
             if (doc.id === globalUserId) {
                 const skipped = doc.data().skipped || [];
                 const updatedSkipped = [...skipped, userId];
-                console.log("skip update");
-                console.log(updatedSkipped);
                 await setDoc(doc.ref, {skipped: updatedSkipped }, { merge: true });
             }
         });
@@ -302,10 +300,8 @@ app.get('/fetchRequests', async (req, res) => {
                 userData = doc.data();
             }
         });
-        console.log(userData.requests);
         res.send(userData.requests);
     } catch (error) {
-        console.error('Error fetching requests:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
@@ -329,7 +325,58 @@ app.get('/fetcher', async (req, res) => {
     }
 });
 
+app.get('/globalUserId', async (req, res) => {
+    res.send(globalUserId);
+});
 
+app.get('/addChat', async (req, res) => {
+    try {
+        const globalUserId = req.query.globalUserId; 
+        const requester = req.query.requester; 
+        const querySnapshot = await getDocs(collection(db, "users"));
+
+        // Update chats for globalUserId
+        for (const doc of querySnapshot.docs) {
+            if (doc.id === globalUserId) {
+                const chats = doc.data().chats || [];
+                const updatedChats = [...chats, requester];
+                await setDoc(doc.ref, { chats: updatedChats }, { merge: true });
+            }
+        }
+
+        // Update chats for requester
+        for (const doc of querySnapshot.docs) {
+            if (doc.id === requester) {
+                const chats = doc.data().chats || [];
+                const updatedChats = [...chats, globalUserId];
+                await setDoc(doc.ref, { chats: updatedChats }, { merge: true });
+            }
+        }
+
+        // Remove requester from matches of globalUserId
+        for (const doc of querySnapshot.docs) {
+            if (doc.id === globalUserId) {
+                const userData = doc.data();
+                let requests = userData.requests || [];
+                requests = requests.filter(request => request.requester !== requester);
+                await setDoc(doc.ref, { requests: requests }, { merge: true });
+            }
+        }
+
+        for (const doc of querySnapshot.docs) {
+            if (doc.id === requester) {
+                const userData = doc.data();
+                let requests = userData.requests || [];
+                requests = requests.filter(request => request.requester !== globalUserId);
+                await setDoc(doc.ref, { requests: requests }, { merge: true });
+            }
+        }
+
+        res.send("Chats added successfully.");
+    } catch (error) {
+        res.status(500).send("Internal Server Error");
+    }
+});
 
 
 app.listen(PORT, () => {

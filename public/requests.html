@@ -34,18 +34,33 @@
         .card p {
             margin: 5px 0;
         }
+
+         /* Style for match button */
+         .match-button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .match-button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
     <div id="requestsContainer"></div>
 
     <script>
-        fetch('/fetchRequests') // Replace 'yourUserId' with the actual userId
+        function setUpRequests(){
+        fetch('/fetchRequests') 
             .then(response => response.json())
             .then(requests => {
                 // Get the container element
                 const container = document.getElementById('requestsContainer');
-                
+                container.innerHTML='';
                 // Loop through each request and create a card-like structure
                 requests.forEach((request, index) => {
                     // Create a div element for each request
@@ -57,6 +72,7 @@
                         <p>Input 1: ${request.input1}</p>
                         <p>Input 2: ${request.input2}</p>
                         <p>Input 3: ${request.input3}</p>
+                        <button class="match-button" onclick="addToChat('${request.requester}')">Match</button>
                     `;
 
                     // Append the card to the container
@@ -67,6 +83,19 @@
                 console.error('Error fetching requests:', error);
                 // Handle error
             });
+        }
+            async function addToChat(requester) {
+                const response = await fetch('/globalUserId');
+                const data = await response.text();
+                globalUserId = data;
+                const url = `/addChat?globalUserId=${globalUserId}&requester=${requester}`;
+                const res = await fetch(url, {
+                    method: 'GET'
+                });
+                setUpRequests();
+
+            }
+            setUpRequests();
     </script>
 </body>
 </html>
