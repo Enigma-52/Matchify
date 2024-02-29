@@ -80,6 +80,7 @@ async function getLatestMessage(user) {
         {
             text="You: " + latestMessage.message;
         }
+        else text=latestMessage.message;
 
         return latestMessage ? text : '';
     } catch (error) {
@@ -88,23 +89,14 @@ async function getLatestMessage(user) {
     }
 }
 
-function toggleChatInput() {
-    var chatInput = document.querySelector('.chat-input');
-    if (chatInput.hasAttribute('hidden')) {
-        chatInput.removeAttribute('hidden');
-    } else {
-        chatInput.setAttribute('hidden', 'true');
-    }
-}
-
-
 var userId;
 // Start chat with a user
 async function startChatWithUser(user) {
     userId=user;
    document.getElementById('currentChatUser').textContent = `Chatting with: ${userId.slice(-6)}`;
    
-   toggleChatInput();
+   var chatInput = document.querySelector('.chat-input');
+   chatInput.removeAttribute('hidden');
    // Display chat messages between the current user and the selected user
    const chatMessagesContainer = document.getElementById('chat-messages');
         chatMessagesContainer.innerHTML = '';
@@ -142,6 +134,7 @@ async function startChatWithUser(user) {
 async function sendMessage() {
     const messageInput = document.getElementById('message-input');
     const message = messageInput.value.trim();
+    messageInput.innerText='';
     const currentChatUser = userId;
     console.log("sending");
     if (message !== '') {

@@ -82,8 +82,28 @@ function createModal(userId) {
                 const input1 = modal.querySelector('#input1').value;
                 const input2 = modal.querySelector('#input2').value;
                 const input3 = modal.querySelector('#input3').value;
-                sendUserData(globalUserId,userId, input1, input2, input3); // Call function to send data to server
-                modal.style.display = 'none'; // Close the modal after sending data
+                sendUserData(globalUserId,userId, input1, input2, input3,modal);
+                fetch('/skipped', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ globalUserId, userId })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to send data to server');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error sending data to server:', error);
+                });
+                fetchMatchingSongs();
+                modal.style.display = 'none';
+                setTimeout(function() {
+                    location.reload();
+                }, 500);
+
             });
         })
         .catch(error => {
@@ -94,12 +114,11 @@ function createModal(userId) {
     modal.style.display = 'block';
 }
 
-
-// Function to send user data to the server
-function sendUserData(globalUserId,userId, input1, input2, input3) {
+async function sendUserData(globalUserId,userId, input1, input2, input3) {
     // Construct the request body
     console.log(userId);
     const body = JSON.stringify({ globalUserId,userId, input1, input2, input3 });
+    //Remove this match from both sides
 
     // Send a POST request to the server endpoint
     fetch('/reqSender', {
@@ -119,7 +138,9 @@ function sendUserData(globalUserId,userId, input1, input2, input3) {
     .catch(error => {
         console.error('Error sending data:', error);
     });
+    fetchMatchingSongs();
 }
+
 
 function fetchMatchingSongs() {
     // Fetch matching songs data from the server and update the table

@@ -225,7 +225,7 @@ app.post('/updateUserInfo', async (req, res) => {
       // Send an error response
       res.status(500).send('Internal Server Error');
     }
-  });
+});
 
   
 app.post('/reqSender', async (req, res) => {
@@ -279,6 +279,14 @@ app.post('/skipped', async (req, res) => {
                 await setDoc(doc.ref, {skipped: updatedSkipped }, { merge: true });
             }
         });
+
+        querySnapshot.forEach(async (doc) => {
+            if (doc.id === userId) {
+                const skipped = doc.data().skipped || [];
+                const updatedSkipped = [...skipped, globalUserId];
+                await setDoc(doc.ref, {skipped: updatedSkipped }, { merge: true });
+            }
+        });
         // Send a success response back to the client
         res.status(200).send('Matches data updated successfully');
     } catch (error) {
@@ -318,6 +326,8 @@ app.get('/fetcher', async (req, res) => {
                 matchesData = matches.filter(match => !skippedIds.includes(match[0].userId)); // Filter out matches where userId is skipped
             }
         });
+        console.log("Matches Data");
+        console.log(matchesData);
         res.send(matchesData);
     } catch (error) {
         console.error('Error fetching matches data:', error);
