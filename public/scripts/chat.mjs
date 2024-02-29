@@ -88,6 +88,15 @@ async function getLatestMessage(user) {
     }
 }
 
+function toggleChatInput() {
+    var chatInput = document.querySelector('.chat-input');
+    if (chatInput.hasAttribute('hidden')) {
+        chatInput.removeAttribute('hidden');
+    } else {
+        chatInput.setAttribute('hidden', 'true');
+    }
+}
+
 
 var userId;
 // Start chat with a user
@@ -95,7 +104,7 @@ async function startChatWithUser(user) {
     userId=user;
    document.getElementById('currentChatUser').textContent = `Chatting with: ${userId.slice(-6)}`;
    
-
+   toggleChatInput();
    // Display chat messages between the current user and the selected user
    const chatMessagesContainer = document.getElementById('chat-messages');
         chatMessagesContainer.innerHTML = '';

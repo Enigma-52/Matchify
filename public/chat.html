@@ -31,7 +31,7 @@
         <div class="chat-area">
           <h2 id="currentChatUser"></h2>
           <div id="chat-messages" class="chat-messages"></div>
-          <div class="chat-input">
+          <div class="chat-input" hidden>
             <input type="text" id="message-input" placeholder="Type your message...">
             <button id="send-button">Send</button>
         </div>
@@ -42,7 +42,6 @@
     <script type="module" >
     import  {sendMessage} from './scripts/chat.mjs'
 
-    // Add event listener after the handleGoogle function is imported
     document.getElementById('send-button').addEventListener('click', sendMessage);
     </script>
 </body>
