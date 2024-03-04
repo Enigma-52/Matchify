@@ -45,8 +45,31 @@ async function displayChatUsers() {
             li.innerHTML = `
                 <div class="user-name">${user.slice(-6)}</div>
                 <div class="latest-message">${await getLatestMessage(user)}</div>
+                <div class="close-chat">X</div>
             `;
             li.onclick = () => startChatWithUser(user);
+            li.querySelector('.close-chat').addEventListener('click', async (event) => {
+            const querySnapshot = await getDocs(collection(db, "users"));
+
+            // Update chats for globalUserId
+            for (const doc of querySnapshot.docs) {
+                if (doc.id === globalUserId) {
+                    const chats = doc.data().chats || [];
+                    const updatedChats = [...chats, requester];
+                    await setDoc(doc.ref, { chats: updatedChats }, { merge: true });
+                }
+            }
+
+            // Update chats for requester
+            for (const doc of querySnapshot.docs) {
+                if (doc.id === requester) {
+                    const chats = doc.data().chats || [];
+                    const updatedChats = [...chats, globalUserId];
+                    await setDoc(doc.ref, { chats: updatedChats }, { merge: true });
+                }
+            }
+                li.remove();
+            });
             userList.appendChild(li);
         });
     } catch (error) {
@@ -134,7 +157,7 @@ async function startChatWithUser(user) {
 async function sendMessage() {
     const messageInput = document.getElementById('message-input');
     const message = messageInput.value.trim();
-    messageInput.innerText='';
+    messageInput.value='';
     const currentChatUser = userId;
     console.log("sending");
     if (message !== '') {
