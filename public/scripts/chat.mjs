@@ -27,6 +27,7 @@ async function fetchDataAndStart() {
 }
 
 
+
 // Display chat users in the sidebar
 async function displayChatUsers() {
     try {
