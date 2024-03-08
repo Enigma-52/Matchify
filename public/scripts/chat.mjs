@@ -7,7 +7,8 @@ const {
     getDocs,
     getDoc,
     collection,
-    addDoc
+    addDoc,
+    onSnapshot
 } = pkg;
 
 var globalUserId;
@@ -116,43 +117,47 @@ async function getLatestMessage(user) {
 var userId;
 // Start chat with a user
 async function startChatWithUser(user) {
-    userId=user;
-   document.getElementById('currentChatUser').textContent = `Chatting with: ${userId.slice(-6)}`;
-   
-   var chatInput = document.querySelector('.chat-input');
-   chatInput.removeAttribute('hidden');
-   // Display chat messages between the current user and the selected user
-   const chatMessagesContainer = document.getElementById('chat-messages');
-        chatMessagesContainer.innerHTML = '';
+    userId = user;
+    document.getElementById('currentChatUser').textContent = `Chatting with: ${userId.slice(-6)}`;
+    
+    var chatInput = document.querySelector('.chat-input');
+    chatInput.removeAttribute('hidden');
 
-        // Reference to the collection of users
-        const usersCollectionRef = collection(db, 'users');
+    // Display chat messages between the current user and the selected user
+    const chatMessagesContainer = document.getElementById('chat-messages');
+    chatMessagesContainer.innerHTML = '';
 
-        // Get all user documents
-        const querySnapshot = await getDocs(usersCollectionRef);
+    // Reference to the collection of users
+    const usersCollectionRef = collection(db, 'users');
 
-        var messages;
-        querySnapshot.forEach(doc => {
-            if(doc.id == globalUserId)
-            {
-                const userData = doc.data();
-                messages = userData.messages;
-            }
-        });
-        if(!messages) return;
-   messages.forEach(msg => {
-      if ((msg.sender === globalUserId && msg.receiver === user) || (msg.sender === user && msg.receiver === globalUserId)) {
-         const messageDiv = document.createElement('div');
-         messageDiv.classList.add('message');
-         if (msg.sender === globalUserId) {
+    // Set up a real-time listener for the selected user's document
+    onSnapshot(doc(usersCollectionRef, user), (doc) => {
+        if (doc.exists()) {
+            const userData = doc.data();
+            const messages = userData.messages || []; // Assuming messages are stored in an array within each user document
+
+            // Update the chat messages
+            updateChatMessages(messages);
+        }
+    });
+}
+
+// Helper function to update the chat messages in the UI
+function updateChatMessages(messages) {
+    const chatMessagesContainer = document.getElementById('chat-messages');
+    chatMessagesContainer.innerHTML = ''; // Clear existing messages
+
+    messages.forEach(msg => {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message');
+        if (msg.sender === globalUserId) {
             messageDiv.classList.add('sent');
-         } else {
+        } else {
             messageDiv.classList.add('received');
-         }
-         messageDiv.innerHTML = `<span class="sender"></span>${msg.message}`;
-         chatMessagesContainer.appendChild(messageDiv);
-      }
-   });
+        }
+        messageDiv.innerHTML = `<span class="sender"></span>${msg.message}`;
+        chatMessagesContainer.appendChild(messageDiv);
+    });
 }
 
 async function sendMessage() {
@@ -223,7 +228,8 @@ async function sendMessage() {
             
             // Refresh the chat messages display
             startChatWithUser(currentChatUser);
-            updateLatestMessagesForAllUsers();
+            displayChatUsers();
+
             messageInput.value = ''; // Clear the message input field
         } catch (error) {
             console.error('Error sending message:', error);
