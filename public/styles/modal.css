@@ -36,6 +36,7 @@
     text-decoration: none;
 }
 
+/* Input styles */
 .input-group {
     margin-bottom: 15px;
 }
@@ -52,11 +53,12 @@ input[type="text"] {
     border-radius: 4px;
 }
 
+/* Button styles */
 .button-group {
     text-align: right;
 }
 
-button {
+.button {
     padding: 8px 16px;
     margin-left: 10px;
     border: none;

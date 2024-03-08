@@ -33,8 +33,8 @@ function createModal(userId) {
                     <input type="text" id="input2" name="input2"><br><br>
                     <label for="input3">Input 3:</label>
                     <input type="text" id="input3" name="input3"><br><br>
-                    <button class="skip-button">Skip</button>
-                    <button class="send-button">Send</button>
+                    <button class="button skip-button">Skip</button>
+                    <button class="button send-button">Send</button>
                     </div>
             `;
             
@@ -167,7 +167,7 @@ function fetchMatchingSongs() {
                 row.innerHTML = `
                     <td>${userId}</td>
                     <td>${matchingSongsCount}</td>
-                    <td><button class="modal-button" onclick="createModal('${userId}')">Open Modal</button></td>
+                    <td><button  onclick="createModal('${userId}')">Open Modal</button></td>
                 `;
                 matchingSongsBody.appendChild(row);
             });
