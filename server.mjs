@@ -142,7 +142,7 @@ app.get('/callback', async (req, res) => {
             }
         });
 
-        const topArtistsResponse = await fetch('https://api.spotify.com/v1/me/top/artists?limit=5', {
+        const topArtistsResponse = await fetch('https://api.spotify.com/v1/me/top/artists?limit=5&time_range=long_term', {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
@@ -156,7 +156,7 @@ app.get('/callback', async (req, res) => {
         const favoriteArtists = topArtistsData.items.map(artist => artist.name);
 
         // Fetch user's favorite song
-        const topTracksResponse = await fetch('https://api.spotify.com/v1/me/top/tracks?limit=1', {
+        const topTracksResponse = await fetch('https://api.spotify.com/v1/me/top/tracks?limit=1&time_range=long_term', {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
