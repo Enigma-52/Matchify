@@ -30,7 +30,7 @@ const PORT = process.env.PORT || 3010;
 const clientId = '1e401c0abab646b198424c8ba42a5463';
 const clientSecret = 'f911e9426fe44b7785d03b932b18ba16';
 const redirectUri = 'http://localhost:3010/callback'; // Update with your actual redirect URI
-const scopes = 'user-read-recently-played user-read-currently-playing user-library-read'; // Add any other scopes as needed
+const scopes = 'user-read-recently-played user-read-currently-playing user-library-read user-top-read'; // Add any other scopes as needed
 
 app.use(express.static('public'));
 
@@ -141,6 +141,42 @@ app.get('/callback', async (req, res) => {
                 });
             }
         });
+
+        const topArtistsResponse = await fetch('https://api.spotify.com/v1/me/top/artists?limit=5', {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+        if (!topArtistsResponse.ok) {
+            throw new Error('Failed to fetch user\'s top artists');
+        }
+
+        const topArtistsData = await topArtistsResponse.json();
+        const favoriteArtists = topArtistsData.items.map(artist => artist.name);
+
+        // Fetch user's favorite song
+        const topTracksResponse = await fetch('https://api.spotify.com/v1/me/top/tracks?limit=1', {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+        if (!topTracksResponse.ok) {
+            throw new Error('Failed to fetch user\'s top track');
+        }
+
+        const topTracksData = await topTracksResponse.json();
+        const favoriteSong = topTracksData.items[0].name;
+
+        // Update user document in Firestore
+        const docRef = doc(db, "users", userId);
+        const favData = {
+            favoriteArtists: favoriteArtists,
+            favoriteSong: favoriteSong
+        };
+        await setDoc(docRef, favData, { merge: true });
+
 
         matchData = matchingSongsCounts;
         const docSnapshot = await getDocs(collection(db, "users"));
