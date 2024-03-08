@@ -169,7 +169,7 @@ app.get('/callback', async (req, res) => {
         {
             res.redirect('callback.html');
         }
-        else res.redirect('details.html');
+        else res.redirect('profile.html');
 
 
     } catch (error) {
