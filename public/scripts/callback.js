@@ -152,16 +152,22 @@ function fetchMatchingSongs() {
             // Update the table with the received data
             const matchingSongsBody = document.getElementById('matchingSongsBody');
             matchingSongsBody.innerHTML = '';
-
+            console.log("Data---");
+            console.log(data);
             data.forEach(entry => {
-                globalUserId = entry['0'].globalUserId;
-                console.log("id is " + globalUserId);
-
+                // Get the key of the entry object (0, 1, etc.)
+                const key = Object.keys(entry)[0];
+                // Access the data within the entry object using the key
+                const entryData = entry[key];
+                
+                console.log(entryData);
+                const userId = entryData.userId;
+                const matchingSongsCount = entryData.matchingSongsCount;
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${entry['0'].userId}</td>
-                    <td>${entry['0'].matchingSongsCount}</td>
-                    <td><button class="modal-button" onclick="createModal('${entry['0'].userId}')">Open Modal</button></td>
+                    <td>${userId}</td>
+                    <td>${matchingSongsCount}</td>
+                    <td><button class="modal-button" onclick="createModal('${userId}')">Open Modal</button></td>
                 `;
                 matchingSongsBody.appendChild(row);
             });
@@ -171,6 +177,7 @@ function fetchMatchingSongs() {
             // Handle error
         });
 }
+
 
 
 

@@ -167,13 +167,13 @@ app.get('/callback', async (req, res) => {
         }
 
         const topTracksData = await topTracksResponse.json();
-        const favoriteSong = topTracksData.items[0].name;
+        //const favoriteSong = topTracksData.items[0].name;
 
         // Update user document in Firestore
         const docRef = doc(db, "users", userId);
         const favData = {
             favoriteArtists: favoriteArtists,
-            favoriteSong: favoriteSong
+            //favoriteSong: favoriteSong
         };
         await setDoc(docRef, favData, { merge: true });
 
@@ -357,13 +357,18 @@ app.get('/fetcher', async (req, res) => {
         querySnapshot.forEach(doc => {
             if (doc.id === globalUserId) {
                 const userData = doc.data();
-                const matches = userData.matches || [];
-                const skippedIds = userData.skipped || []; // Fetch skipped user ids
-                matchesData = matches.filter(match => !skippedIds.includes(match[0].userId)); // Filter out matches where userId is skipped
+                if (userData) {
+                    const matches = userData.matches || [];
+                    const skippedIds = userData.skipped || []; // Fetch skipped user ids
+                    if(skippedIds.length>0)
+                    {
+                        matchesData = matches.filter(match => !skippedIds.includes(match[0].userId)); // Filter out matches where userId is skipped
+                    }
+                    else matchesData=matches;
+                }
             }
+            
         });
-        console.log("Matches Data");
-        console.log(matchesData);
         res.send(matchesData);
     } catch (error) {
         console.error('Error fetching matches data:', error);
