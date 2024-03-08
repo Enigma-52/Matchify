@@ -35,7 +35,7 @@ function createModal(userId) {
                     <input type="text" id="input3" name="input3"><br><br>
                     <button class="skip-button">Skip</button>
                     <button class="send-button">Send</button>
-                </div>
+                    </div>
             `;
             
             // Append the modal to the document body
