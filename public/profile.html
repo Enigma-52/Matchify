@@ -51,25 +51,51 @@
     </div>
 </nav>
 
-<h2>Enter Your Information</h2>
-<form id="userInfoForm">
-  <label for="name">Name:</label>
-  <input type="text" id="nameInput" name="name" placeholder="Your Name" required><br>
+<div class="container mx-auto mt-10 px-4 flex justify-center">
+  <div>
+      <h2 class="text-2xl font-bold mb-4">Enter Your Information</h2>
+      <form id="userInfoForm" class="max-w-sm">
+        <div class="mb-4">
+          <label for="name" class="block text-gray-700 font-bold mb-2">Name:</label>
+          <input type="text" id="nameInput" name="name" placeholder="Your Name" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
 
-  <label for="age">Age:</label>
-  <input type="number" id="ageInput" name="age" placeholder="Your Age" required><br>
+        <div class="mb-4">
+          <label for="age" class="block text-gray-700 font-bold mb-2">Age:</label>
+          <input type="number" id="ageInput" name="age" placeholder="Your Age" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
 
-  <label for="sexuality">Sexuality:</label>
-  <input type="text" id="sexualityInput" name="sexuality" placeholder="Your Sexuality" required><br>
+        <div class="mb-4">
+          <label for="sexuality" class="block text-gray-700 font-bold mb-2">Sexuality:</label>
+          <input type="text" id="sexualityInput" name="sexuality" placeholder="Your Sexuality" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
 
-  <label for="gender">Gender:</label>
-  <input type="text" id="genderInput" name="gender" placeholder="Your Gender" required><br>
+        <div class="mb-4">
+          <label for="gender" class="block text-gray-700 font-bold mb-2">Gender:</label>
+          <input type="text" id="genderInput" name="gender" placeholder="Your Gender" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
 
-  <label for="city">City:</label>
-  <input type="text" id="cityInput" name="city" placeholder="Your City" required><br>
+        <div class="mb-4">
+          <label for="city" class="block text-gray-700 font-bold mb-2">City:</label>
+          <input type="text" id="cityInput" name="city" placeholder="Your City" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
 
-  <button type="submit">Submit</button>
-</form>
+        <div class="mb-4">
+          <label for="instagram" class="block text-gray-700 font-bold mb-2">Instagram:</label>
+          <input type="text" id="instagramInput" name="instagram" placeholder="Your Instagram Handle" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+      </div>
+
+      <div class="mb-4">
+          <label for="bio" class="block text-gray-700 font-bold mb-2">Bio:</label>
+          <textarea id="bioInput" name="bio" placeholder="Your Bio" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
+      </div>
+
+    <div class="flex justify-center">
+      <button type="submit" class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Submit</button>
+    </div>
+  </form>
+</div>
+
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -81,6 +107,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const sexuality = document.getElementById('sexualityInput').value;
     const gender = document.getElementById('genderInput').value;
     const city = document.getElementById('cityInput').value;
+    const insta = document.getElementById('instagramInput').value;
+    const bio = document.getElementById('bioInput').value;
 
     // Send the user data to the server
     fetch('/updateUserInfo', {
@@ -88,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ name, age, sexuality, gender, city })
+      body: JSON.stringify({ name, age, sexuality, gender, city,insta,bio })
     })
     .then(response => {
       if (response.ok) {

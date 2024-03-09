@@ -249,7 +249,9 @@ app.post('/updateUserInfo', async (req, res) => {
         age,
         sexuality,
         gender,
-        city
+        city,
+        insta,
+        bio
       };
       const details = {data};
       await setDoc(docRef, details, { merge: true });
