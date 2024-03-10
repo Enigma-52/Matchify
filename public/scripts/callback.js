@@ -165,9 +165,9 @@ function fetchMatchingSongs() {
                 const matchingSongsCount = entryData.matchingSongsCount;
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${userId}</td>
+                    <td>${userId.slice(-6)}</td>
                     <td>${matchingSongsCount}</td>
-                    <td><button  onclick="createModal('${userId}')">Open Modal</button></td>
+                    <td><button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"  onclick="createModal('${userId}')">Open Modal</button></td>
                 `;
                 matchingSongsBody.appendChild(row);
             });
