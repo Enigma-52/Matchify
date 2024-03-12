@@ -115,7 +115,7 @@ app.get('/callback', async (req, res) => {
         }));
 
         try {
-            const docRef = doc(db, "users", userId); // Replace "documentId" with the actual document ID you want to update
+            const docRef = doc(db, "users", userId);
             const data = {
                 likedSongs: tracks
             };
