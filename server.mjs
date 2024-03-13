@@ -166,7 +166,7 @@ app.get('/callback', async (req, res) => {
         }
 
         const topTracksData = await topTracksResponse.json();
-        
+
         const docRef = doc(db, "users", userId);
         const favData = {
             favoriteArtists: favoriteArtists,
@@ -214,7 +214,7 @@ app.get('/callback', async (req, res) => {
 // Define a route handler to fetch user details
 app.get('/getUserDetails', async (req, res) => {
     try {
-      const userId = req.query.userId; // Assuming you're storing the userId in session
+      const userId = req.query.userId; 
   
         const docSnapshot = await getDocs(collection(db, "users"));
         let userData = {};
