@@ -166,9 +166,7 @@ app.get('/callback', async (req, res) => {
         }
 
         const topTracksData = await topTracksResponse.json();
-        //const favoriteSong = topTracksData.items[0].name;
-
-        // Update user document in Firestore
+        
         const docRef = doc(db, "users", userId);
         const favData = {
             favoriteArtists: favoriteArtists,
