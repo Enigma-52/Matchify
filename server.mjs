@@ -96,7 +96,6 @@ app.get('/callback', async (req, res) => {
         const userProfileData = await userProfileResponse.json();
         const userId = userProfileData.id;
         globalUserId = userId;
-        // Fetch user's saved tracks with a limit of 50
         const savedTracksResponse = await fetch('https://api.spotify.com/v1/me/tracks?limit=50', {
             headers: {
                 'Authorization': `Bearer ${accessToken}`
