@@ -50,27 +50,31 @@ async function displayChatUsers() {
                 <div class="close-chat">X</div>
             `;
             li.onclick = () => startChatWithUser(user);
-            li.querySelector('.close-chat').addEventListener('click', async (event) => {
-            const querySnapshot = await getDocs(collection(db, "users"));
-
-            // Update chats for globalUserId
-            for (const doc of querySnapshot.docs) {
-                if (doc.id === globalUserId) {
-                    const chats = doc.data().chats || [];
-                    const updatedChats = [...chats, requester];
-                    await setDoc(doc.ref, { chats: updatedChats }, { merge: true });
+            li.querySelector('.close-chat').addEventListener('click', async (event) => 
+            {
+                const querySnapshot = await getDocs(collection(db, "users"));
+                console.log("close clicked");
+                // Update chats for globalUserId
+                for (const doc of querySnapshot.docs) {
+                    if (doc.id === globalUserId) {
+                        const chats = doc.data().chats || [];
+                        const updatedChats = chats.filter(id => id !== user);
+                        await setDoc(doc.ref, { chats: updatedChats }, { merge: true });
+                    }
                 }
-            }
 
-            // Update chats for requester
-            for (const doc of querySnapshot.docs) {
-                if (doc.id === requester) {
-                    const chats = doc.data().chats || [];
-                    const updatedChats = [...chats, globalUserId];
-                    await setDoc(doc.ref, { chats: updatedChats }, { merge: true });
+                // Update chats for requester
+                for (const doc of querySnapshot.docs) {
+                    if (doc.id === user) {
+                        const chats = doc.data().chats || [];
+                        const updatedChats = chats.filter(id => id !== globalUserId);
+                        await setDoc(doc.ref, { chats: updatedChats }, { merge: true });
+                    }
                 }
-            }
+
                 li.remove();
+                const chatArea = document.getElementById('chat-area');
+                chatArea.innerHTML = '';
             });
             userList.appendChild(li);
         });

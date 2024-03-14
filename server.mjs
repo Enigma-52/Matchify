@@ -264,7 +264,7 @@ app.post('/updateUserInfo', async (req, res) => {
 
   
 app.post('/reqSender', async (req, res) => {
-    const { globalUserId,userId, input1, input2, input3 } = req.body;
+    const { globalUserId ,userId, input1, input2, input3 } = req.body;
 
     try {
         // Reference the existing document in Firestore
@@ -290,7 +290,7 @@ app.post('/reqSender', async (req, res) => {
         const data = {
             requests: requests
         };
-
+        console.log(data);
         // Update the document with the new requests array
         await setDoc(doc(db, "users", userId), data, { merge: true });
 
@@ -358,12 +358,9 @@ app.get('/fetcher', async (req, res) => {
                 const userData = doc.data();
                 if (userData) {
                     const matches = userData.matches || [];
-                    const skippedIds = userData.skipped || []; // Fetch skipped user ids
-                    if(skippedIds.length>0)
-                    {
-                        matchesData = matches.filter(match => !skippedIds.includes(match[0].userId)); // Filter out matches where userId is skipped
-                    }
-                    else matchesData=matches;
+                    const skippedIds = userData.skipped || [];
+                    console.log(matches);
+                    matchesData=matches;
                 }
             }
             

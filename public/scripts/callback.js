@@ -82,7 +82,7 @@ function createModal(userId) {
                 const input1 = modal.querySelector('#input1').value;
                 const input2 = modal.querySelector('#input2').value;
                 const input3 = modal.querySelector('#input3').value;
-                sendUserData(globalUserId,userId, input1, input2, input3,modal);
+                sendUserData(globalUserId,userId, input1, input2, input3);
                 fetch('/skipped', {
                     method: 'POST',
                     headers: {
@@ -119,7 +119,7 @@ async function sendUserData(globalUserId,userId, input1, input2, input3) {
     console.log(userId);
     const body = JSON.stringify({ globalUserId,userId, input1, input2, input3 });
     //Remove this match from both sides
-
+    console.log(body);
     // Send a POST request to the server endpoint
     fetch('/reqSender', {
         method: 'POST',
@@ -161,6 +161,7 @@ function fetchMatchingSongs() {
                 const entryData = entry[key];
                 
                 console.log(entryData);
+                globalUserId=entryData.globalUserId;
                 const userId = entryData.userId;
                 const matchingSongsCount = entryData.matchingSongsCount;
                 const row = document.createElement('tr');
