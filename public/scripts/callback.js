@@ -19,23 +19,49 @@ function createModal(userId) {
             
             // Create the modal content
             modal.innerHTML = `
-                <div class="modal-content">
-                    <span class="close">&times;</span>
-                    <h2>User Details for ${userData.data.name}</h2>
-                        <p><strong>Name:</strong> ${userData.data.name}</p>
-                        <p><strong>Age:</strong> ${userData.data.age}</p>
-                        <p><strong>Sexuality:</strong> ${userData.data.sexuality}</p>
-                        <p><strong>Gender:</strong> ${userData.data.gender}</p>
-                        <p><strong>City:</strong> ${userData.data.city}</p>
-                    <label for="input1">Input 1:</label>
-                    <input type="text" id="input1" name="input1"><br><br>
-                    <label for="input2">Input 2:</label>
-                    <input type="text" id="input2" name="input2"><br><br>
-                    <label for="input3">Input 3:</label>
-                    <input type="text" id="input3" name="input3"><br><br>
-                    <button class="button skip-button">Skip</button>
-                    <button class="button send-button">Send</button>
-                    </div>
+            <div class="modal-content p-6">
+            <span class="close">&times;</span>
+            <h2 class="text-xl font-bold mb-4">User Details for ${userData.data.name}</h2>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <p><strong>Name:</strong></p>
+                    <p>${userData.data.name}</p>
+                </div>
+                <div>
+                    <p><strong>Age:</strong></p>
+                    <p>${userData.data.age}</p>
+                </div>
+                <div>
+                    <p><strong>Sexuality:</strong></p>
+                    <p>${userData.data.sexuality}</p>
+                </div>
+                <div>
+                    <p><strong>Gender:</strong></p>
+                    <p>${userData.data.gender}</p>
+                </div>
+                <div>
+                    <p><strong>City:</strong></p>
+                    <p>${userData.data.city}</p>
+                </div>
+                <div class="col-span-2">
+                    <label for="input1" class="block">Input 1:</label>
+                    <input type="text" id="input1" name="input1" class="input-field">
+                </div>
+                <div class="col-span-2">
+                    <label for="input2" class="block">Input 2:</label>
+                    <input type="text" id="input2" name="input2" class="input-field">
+                </div>
+                <div class="col-span-2">
+                    <label for="input3" class="block">Input 3:</label>
+                    <input type="text" id="input3" name="input3" class="input-field">
+                </div>
+            </div>
+            <div class="mt-6 flex justify-between">
+                <button class="button skip-button mr-4">Skip</button>
+                <button class="button send-button">Send</button>
+            </div>
+        </div>
+        
             `;
             
             // Append the modal to the document body
