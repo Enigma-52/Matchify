@@ -233,11 +233,32 @@ app.get('/getUserDetails', async (req, res) => {
       res.status(500).send('Internal Server Error');
     }
   });
+
+app.get('/getUserInfo', async (req, res) => {
+    try {
+        const userId = globalUserId;
+    
+          const docSnapshot = await getDocs(collection(db, "users"));
+          let userData = {};
   
+          docSnapshot.forEach(doc => {
+              if (doc.id === userId) {
+                  userData = doc.data();
+              }
+          });
+          console.log(userData.data);
+        // Send the user details as a response
+        res.status(200).json(userData.data);
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+        // Send an error response
+        res.status(500).send('Internal Server Error');
+      }
+});
 
 app.post('/updateUserInfo', async (req, res) => {
     try {
-      const { name, age, sexuality, gender, city } = req.body;
+      const { name, age, sexuality, gender, city,insta,bio } = req.body;
       const userId = globalUserId; 
       
       const docRef = doc(db, "users", userId);
