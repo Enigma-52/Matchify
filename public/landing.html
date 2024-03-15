@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matchify - Find Your Songmate</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-purple-500 to-pink-500 min-h-screen flex flex-col text-white">
+       <header class="container mx-auto px-6 py-6 flex justify-between items-center">
+        <h1 class="text-4xl font-bold">Matchify</h1>
+    </header>
+
+    <main class="py-5 container mx-auto px-6 flex flex-col items-center justify-center flex-1 text-center">
+        <h2 class="text-6xl font-bold mb-4">Find Your Songmate</h2>
+        <p class="mb-8 text-lg">Connect with singles who share your taste in music. Sign up today and let the music play cupid.</p>
+        <a href="#" onclick="authorize()" class="bg-white text-purple-700 font-medium py-3 px-8 rounded-full shadow-lg hover:bg-gray-100 transition-colors">Get Started</a>
+    </main>
+
+    <section class="container mx-auto px-6 py-16 bg-white text-purple-700 rounded-lg">
+        <h3 class="text-4xl font-bold text-center mb-10">Success Stories</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <div class="text-center">
+                <img src="https://placehold.co/100x100" alt="Profile picture of satisfied user" class="rounded-full mx-auto mb-4">
+                <blockquote>"Matchify helped me find love through our shared love for indie rock. We went to our first concert together last month!"</blockquote>
+                <cite>- Emma</cite>
+            </div>
+            <div class="text-center">
+                <img src="https://placehold.co/100x100" alt="Profile picture of satisfied user" class="rounded-full mx-auto mb-4">
+                <blockquote>"I never knew music could be such a great icebreaker. Thanks to Matchify, I've met so many interesting people!"</blockquote>
+                <cite>- Lucas</cite>
+            </div>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-6 py-16">
+        <h3 class="text-4xl font-bold text-center mb-10">How It Works</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <div class="text-center">
+                <i class="fas fa-music fa-3x mb-4"></i>
+                <h4 class="font-semibold text-xl mb-2">Discover Music Together</h4>
+                <p>Explore your matches' playlists and discover new tunes as you connect with them on a deeper level.</p>
+            </div>
+            <div class="text-center">
+                <i class="fas fa-heart fa-3x mb-4"></i>
+                <h4 class="font-semibold text-xl mb-2">Find Matches</h4>
+                <p>Our algorithm pairs you with potential partners based on your listening habits and favorite genres.</p>
+            </div>
+            <div class="text-center">
+                <i class="fas fa-comments fa-3x mb-4"></i>
+                <h4 class="font-semibold text-xl mb-2">Start Chatting</h4>
+                <p>Break the ice with a song recommendation and start chatting with your new songmate right away.</p>
+            </div>
+        </div>
+    </section>
+    
+
+    <!-- <section class="container mx-auto px-6 py-16">
+        <h3 class="text-4xl font-bold text-center mb-10">Join Matchify Today</h3>
+        <form class="w-full max-w-lg mx-auto">
+            <div class="flex flex-wrap -mx-3 mb-6">
+                <div class="w-full px-3">
+                    <label class="block uppercase tracking-wide text-white text-xs font-bold mb-2" for="email">
+                        Email Address
+                    </label>
+                    <input class="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="email" type="email" placeholder="Enter your email">
+                </div>
+            </div>
+            <div class="flex flex-wrap -mx-3 mb-6">
+                <div class="w-full px-3">
+                    <button class="bg-purple-700 hover:bg-purple-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                        Sign Up
+                    </button>
+                </div>
+            </div>
+        </form>
+    </section> -->
+
+    <footer class="container mx-auto px-6 py-8">
+        <div class="flex justify-between items-center">
+            <p>&copy; 2023 Matchify. All Rights Reserved.</p>
+            <div class="flex space-x-4">
+                <a href="#" class="text-white hover:text-gray-300">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" class="text-white hover:text-gray-300">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#" class="text-white hover:text-gray-300">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="#" class="text-white hover:text-gray-300">
+                    <i class="fab fa-spotify"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+    <script>
+        const authorize = () => {
+            console.log("hhrh");
+          window.location.href = '/login';
+        };
+      </script>
+</body>
+</html>
