@@ -1,0 +1,143 @@
+.pricing-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    max-width: 1200px; /* Increased max-width */
+    width: 100%;
+}
+
+.pricing-card {
+    background-color: #fff;
+    padding: 20px; /* Increased padding */
+    border-radius: 15px; /* Increased border radius */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Increased shadow */
+    text-align: center;
+    width: 350px; /* Increased width */
+    margin: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.pricing-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4); /* Increased shadow */
+}
+
+.pricing-card h2 {
+    color: #333;
+    margin-bottom: 30px; /* Increased margin */
+    font-size: 24px; /* Increased font size */
+}
+
+.pricing-card p {
+    color: #666;
+    margin-bottom: 30px; /* Increased margin */
+    font-size: 18px; /* Increased font size */
+}
+
+.pay-btn {
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    padding: 15px 30px; /* Increased padding */
+    border-radius: 6px; /* Increased border radius */
+    cursor: pointer;
+    margin-top: 30px; /* Increased margin */
+    transition: background-color 0.3s ease;
+    font-size: 18px; /* Increased font size */
+}
+
+.pay-btn:hover {
+    background-color: #45a049;
+}
+
+.payment-details {
+    margin-top: 30px; /* Increased margin */
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.pricing-card:hover .payment-details {
+    opacity: 1;
+}
+
+.payment-details input[type="text"] {
+    padding: 15px; /* Increased padding */
+    border-radius: 6px; /* Increased border radius */
+    border: 2px solid #ccc; /* Increased border width */
+    margin-right: 20px; /* Increased margin */
+    font-size: 16px; /* Increased font size */
+}
+
+.apply-code-btn, .confirm-payment-btn {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 15px 30px; /* Increased padding */
+    border-radius: 6px; /* Increased border radius */
+    cursor: pointer;
+    margin-top: 20px; /* Increased margin */
+    transition: background-color 0.3s ease;
+    font-size: 18px; /* Increased font size */
+}
+
+.features {
+    text-align: left;
+    margin-top: 30px; /* Increased margin */
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+}
+
+.pricing-card:hover .features {
+    max-height: 300px; /* Adjust based on your content */
+}
+
+.features h3 {
+    color: #333;
+    margin-bottom: 20px; /* Increased margin */
+    font-size: 20px; /* Increased font size */
+}
+
+.features ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.features ul li {
+    margin-bottom: 15px; /* Increased margin */
+    color: #666;
+    font-size: 16px; /* Increased font size */
+    position: relative;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.pricing-card:hover .features ul li {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+.pricing-card.clicked {
+    background-color: #f0f0f0; /* Change background color when clicked */
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4); 
+    
+}
+
+.pricing-card.clicked .features{
+    max-height: none;
+    opacity: 1;
+}
+
+.permanent {
+    display: block !important; /* Ensure it stays visible */
+    opacity: 1 !important; /* Ensure it stays fully visible */
+}

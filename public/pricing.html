@@ -6,6 +6,7 @@
     <title>Pricing</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./styles/pricing.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
@@ -51,10 +52,89 @@
             </div>
         </div>
     </nav>
-    
 
+    <div class="pricing-container">
+        <div class="pricing-card">
+            <h2>Cupid's Apprentice</h2>
+            <p>$10/month</p>
+            <div class="features">
+                <h3>Features:</h3>
+                <ul>
+                    <li>Access to basic profiles</li>
+                    <li>View photos of other members</li>
+                    <li>Send unlimited likes</li>
+                    <li>Limited messaging</li>
+                </ul>
+            </div>
+            <button class="pay-btn" data-target="payment-details-1" onclick="toggleCardClick(this)">Pay Now</button>
+            <div id="payment-details-1" class="payment-details" style="display: none;">
+                <input style="margin: auto;" type="text" placeholder="Enter Promo Code">
+                <button class="confirm-payment-btn">Confirm Payment</button>
+            </div>
+        </div>
+        <div class="pricing-card">
+            <h2>Match Maestro</h2>
+            <p>$20/month</p>
+            <div class="features">
+                <h3>Features:</h3>
+                <ul>
+                    <li>Access to advanced profiles</li>
+                    <li>View detailed compatibility</li>
+                    <li>Send and receive messages</li>
+                    <li>Access to premium support</li>
+                </ul>
+            </div>
+            <button class="pay-btn" data-target="payment-details-2" onclick="toggleCardClick(this)">Pay Now</button>
+            <div id="payment-details-2" class="payment-details" style="display: none;">
+                <input style="margin: auto;" type="text" placeholder="Enter Promo Code">
+                <button class="confirm-payment-btn">Confirm Payment</button>
+            </div>
+        </div>
+        <div class="pricing-card">
+            <h2>Cupid's Champion</h2>
+            <p>$30/month</p>
+            <div class="features">
+                <h3>Features:</h3>
+                <ul>
+                    <li>Access to premium profiles</li>
+                    <li>Priority matching</li>
+                    <li>Advanced privacy controls</li>
+                    <li>24/7 customer support</li>
+                </ul>
+            </div>
+            <button class="pay-btn" onclick="toggleCardClick(this)" data-target="payment-details-3" >Pay Now</button>
+            <div id="payment-details-3" class="payment-details" style="display: none;">
+                <input style="margin: auto;" type="text" placeholder="Enter Promo Code">
+                <button class="apply-code-btn">Confirm Payment</button>
+            </div>
+        </div>
+    </div>
     
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script>
+        
+                function toggleCardClick(button) {
+            // Get the parent pricing card element
+            var card = button.closest('.pricing-card');
+            // Toggle the 'clicked' class on the pricing card
+            card.classList.toggle('clicked');
+
+            // Toggle the 'permanent' class on features and payment details
+            var features = card.querySelector('.features');
+            features.classList.toggle('permanent');
+
+            // Access the list items within the features section
+            var featureItems = features.querySelectorAll('li');
+            featureItems.forEach(function(item) {
+                item.classList.toggle('permanent');
+            });
+
+            var paymentDetails = card.querySelector('.payment-details');
+            paymentDetails.classList.toggle('permanent');
+
+            button.style.display = 'none';
+        }
+
+    </script>
     
 </body>
-</html>
+</html>    
