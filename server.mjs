@@ -432,7 +432,6 @@ app.get('/addChat', async (req, res) => {
             }
         }
 
-        // Remove requester from matches of globalUserId
         for (const doc of querySnapshot.docs) {
             if (doc.id === globalUserId) {
                 const userData = doc.data();
