@@ -423,7 +423,6 @@ app.get('/addChat', async (req, res) => {
             }
         }
 
-        // Update chats for requester
         for (const doc of querySnapshot.docs) {
             if (doc.id === requester) {
                 const chats = doc.data().chats || [];
