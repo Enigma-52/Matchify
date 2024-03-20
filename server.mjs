@@ -399,7 +399,7 @@ app.get('/globalUserId', async (req, res) => {
 
 app.get('/getChatIds', async (req, res) => {
     const querySnapshot = await getDocs(collection(db, "users"));
-        let matchesData; // Initialize matchesData array
+        let matchesData; 
         querySnapshot.forEach(doc => {
             if (doc.id === globalUserId) {
                 matchesData = doc.data();
