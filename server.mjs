@@ -373,7 +373,7 @@ app.get('/fetchRequests', async (req, res) => {
 app.get('/fetcher', async (req, res) => {
     try {
         const querySnapshot = await getDocs(collection(db, "users"));
-        let matchesData = []; // Initialize matchesData array
+        let matchesData = []; 
         querySnapshot.forEach(doc => {
             if (doc.id === globalUserId) {
                 const userData = doc.data();
