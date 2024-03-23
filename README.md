@@ -1,2 +1,2 @@
 # Matchify
-A User-Matching app for people to chat with anyone who is listening to the same song on Spotify
+A User-Matching app for people to connect and chat with others who same similar music taste, data based on Spotify
