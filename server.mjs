@@ -196,7 +196,6 @@ app.get('/callback', async (req, res) => {
             matches: requests
         };
 
-        // Update the document with the new requests array
         await setDoc(doc(db, "users", userId), data, { merge: true });
         if(userData.data)
         {
